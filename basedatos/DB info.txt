@@ -1,0 +1,6 @@
+Base de Datos Sprint 2 en Mongo DB
+
+Collections:
+
+usuarios
+proyectos

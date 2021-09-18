@@ -1,0 +1,132 @@
+//  Colección de proyectos
+
+db.proyectos.insertOne({ 
+
+    nombre: "Desarrollo Aplicativo Web",
+    periodo: "2021-2",
+    descripcion: "Desarrollar una herramienta web con posibilidades infinitas... bla bla bla...",
+    tipo: "Ingeniería aeroespacial",
+    objetivos: {
+        general: "Dominar el universo",
+        especificos: [
+            {value: "Encontrar alternativas al cambio climático"},
+            {value: "Fomentar el desarrollo de la carrera espacial"},
+            {value: "Colonizar el planeta vecino Marte"}
+        ]
+    },
+    presupuesto: {
+        asignado: 15000000,
+        ejecutado: 20000,
+    },
+    fecha_inicial: new Date("2021-09-04T08:00:00"),
+    fecha_final: new Date("2021-11-04T08:00:00"),
+    director: [
+        {documento: 1003458251, fecha_ingreso: new Date(), horas_proyecto: 1800}
+    ],
+    estado: "ejecución", // [EJECUCIÓN, INICIO, CIERRE]
+    fase: "desarrollo", // [INICIO, DESARROLLO, DOCUMENTACIÓN, ENTREGA, FINALIZACIÓN]
+    avances: [
+        {documento: 1003458261, fase: "ejecucion", reporte: "iniciamos etapa 1", fecha_reporte: new Date(), observacion: "xxx"},
+        {documento: 1003458262, fase: "ejecucion", reporte: "iniciamos etapa 2", fecha_reporte: new Date(), observacion: "yyy"}
+    ],
+    miembros: [
+        {documento: 1003458251, fecha_ingreso: new Date(), rol: "lider investigador"},
+        {documento: 1003458262, fecha_ingreso: new Date(), rol: "estudiante investigador"},
+        {documento: 1003458264, fecha_ingreso: new Date(), rol: "estudiante investigador"}
+    ]
+})
+
+// Colección de usuarios (Estos pueden ser ADMIN, ESTUDIANTE, PROFESOR, INVITADO)
+db.createCollection("usuarios")
+db.usuarios.createIndex(
+    {"identificacion": 1}, 
+    {unique: true})
+
+db.usuarios.insertMany([
+    {
+        perfil: "admin",
+        identificacion: 1003458251,
+        nombres: "Yasar José",
+        apellidos: "Cure González",
+        celular: 3002245892,
+        email: "admin@ejemplo.com",
+        username: "admin", 
+        password: "qwerty", 
+        status: "activo", 
+        registrado: new Date()
+    },
+    {
+        perfil: "estudiante",
+        identificacion: 1003458261,
+        nombres: "Leonardo",
+        apellidos: "Pérez López",
+        carrera: "Ingeniería de alimentos",
+        celular: 3002245892,
+        email: "leo@ejemplo.com",
+        status: "activo",
+        registrado: new Date()
+    },
+    {
+        perfil: "estudiante",
+        identificacion: 1003458262,
+        nombres: "Daniela Sofía",
+        apellidos: "Suárez Mendoza",
+        carrera: "Ingeniería de sistemas",
+        celular: 3002245979,
+        email: "dani@ejemplo.com",
+        status: "activo",
+        registrado: new Date()
+    },
+    {
+        perfil: "estudiante",
+        identificacion: 1003458264,
+        nombres: "Adriana Lucía",
+        apellidos: "Matorral Burgos",
+        carrera: "Psicología",
+        celular: 3002245972,
+        email: "adri@ejemplo.com",
+        status: "inactivo",
+        registrado: new Date()
+    },
+    {
+        perfil: "invitado",
+        identificacion: 1003458263,
+        nombres: "Cristiano Ronaldo",
+        apellidos: "Dos Santos Aveiro",
+        carrera: "Futbolista",
+        celular: 3012245979,
+        email: "cr7@ejemplo.com",
+        status: "activo",
+        username: "cr7siu",
+        password: "123456",
+        registrado: new Date()
+    }
+    
+])
+
+// HACER LA "RELACIÓN"
+db.proyectos.aggregate([
+    {
+        $lookup: {
+          from: 'usuarios',
+          localField: 'miembros.documento',
+          foreignField: 'identificacion',
+          as: 'miembros_proyectos'
+        }
+    },
+    {
+        $lookup: {
+          from: 'usuarios',
+          localField: 'director.documento',
+          foreignField: 'identificacion',
+          as: 'director_proyecto'
+        }
+    },
+    {
+        $project: {
+            nombre: 1,
+            "miembros_proyectos": 1,
+        }
+    }
+])
+   
