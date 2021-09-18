@@ -126,6 +126,7 @@ db.proyectos.aggregate([
         $project: {
             nombre: 1,
             "miembros_proyectos": 1,
+            "director_proyecto": 1,
         }
     }
 ])
