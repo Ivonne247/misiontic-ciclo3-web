@@ -1,6 +1,10 @@
 Base de Datos Sprint 2 en Mongo DB
 
-Collections:
-
+--> Collections:
 usuarios
 proyectos
+
+
+--> Cluster Mongo Atlas
+mongosh "mongodb+srv://freecluster.dccdp.mongodb.net" --username admin 
+password: 12345
